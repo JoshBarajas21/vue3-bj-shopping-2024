@@ -20,13 +20,13 @@ See [Vite Configuration Reference](https://vitejs.dev/config/)
 
 # Compile and Hot-Reload for Develompent
 
-`npm run dev`
+```npm run dev```
 
 # Compile and Minify for Production
 
-`npm run build`
+```npm run build```
 
 # Lint with [ESLint](https://eslint.org/)
 
-`npm run lint`
+```npm run lint```
 
