@@ -1,7 +1,7 @@
 <script setup>
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const header = ref("🛒 Shopping List App");
 const items = ref([
@@ -18,7 +18,9 @@ const saveItem = () => {
     label: newItem.value,
     highPriority: newItemHighPriority.value
   });
+  // Reiniciando la entrada del texto
   newItem.value = "";
+  newItemHighPriority = false;
 };
 // Boton que oculta el formulario
 const editing = ref(false);
@@ -29,11 +31,21 @@ const doEdit = (edit) => {
   // en caso de que se oculte o muestre
   // el formulario
   newItem.value = "";
+  newItemHighPriority.value = false;
 };
 // Alternando estado de compra del item
 const togglePurchased = (item) => {
   item.purchased = !item.purchased;
 }
+// Creando una propiedad computada
+const characterCount = computed(() => {
+  // Toda propiedad computada debe regresar un valor
+  return newItem.value.length;
+});
+// Creando propiedad computada que invierte items de la lista
+const reversedItems = computed(() =>{
+  return [...items.value].reverse();
+})
 </script>
 
 <template>
@@ -71,13 +83,18 @@ const togglePurchased = (item) => {
       type="submit"
     >Save Item</button>
   </form>
+  <!-- Contador -->
+  <p class="counter">
+    {{ characterCount }} /200
+  </p>
+
   <!-- Lista -->
   <ul>
-    <li v-for="item in items"
-      @click="togglePurchased(item)"
-      v-bind:key="item.id"
-      :class="{strikeout: item.purchased, priority: item.highPriority }"
-      > ⚜ {{ item.label }}</li>
+    <li v-for="({ id, label, purchased, highPriority }, index) in reversedItems"
+      @click="togglePurchased(reversedItems[index])"
+      v-bind:key="id"
+      :class="{strikeout: purchased, priority: highPriority }"
+      > ⚜ {{ label }}</li>
   </ul>
   <p v-if="items.length === 0"> 🥀 No hay elementos en la lista</p>
 </template>
